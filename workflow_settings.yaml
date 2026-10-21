@@ -1,0 +1,4 @@
+defaultProject: synthetic-demo-project
+defaultDataset: reporting
+defaultAssertionDataset: reporting_checks
+defaultLocation: US

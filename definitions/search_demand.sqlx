@@ -1,0 +1,8 @@
+config {
+ type: "table",
+ description: "Latest snapshot per keyword, language, geography and month. Synthetic search demand, not campaign spend.",
+ assertions: { uniqueKey: ["keyword", "geo", "language", "month"], nonNull: ["keyword", "geo", "language", "month", "searches"], rowConditions: ["searches >= 0"] }
+}
+SELECT keyword, geo, language, month, searches
+FROM ${ref("keyword_monthly")}
+QUALIFY ROW_NUMBER() OVER (PARTITION BY keyword, geo, language, month ORDER BY extracted_at DESC, batch_id DESC) = 1

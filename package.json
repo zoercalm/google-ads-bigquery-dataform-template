@@ -1,0 +1,13 @@
+{
+  "name": "google-ads-bigquery-dataform-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "compile": "dataform compile",
+    "test": "python3 -m unittest -v && dataform compile"
+  },
+  "dependencies": {
+    "@dataform/cli": "3.1.2",
+    "@dataform/core": "3.1.2"
+  }
+}

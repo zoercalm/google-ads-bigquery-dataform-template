@@ -1,0 +1,37 @@
+[
+  {
+    "name": "batch_id",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "keyword",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "geo",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "language",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "month",
+    "type": "DATE",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "searches",
+    "type": "INTEGER",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "extracted_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED"
+  }
+]
