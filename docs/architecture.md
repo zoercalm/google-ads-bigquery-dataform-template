@@ -8,3 +8,5 @@
 The batch ID hashes sorted rows; rerunning the same extraction is idempotent locally. In the cloud, use a staging load and a MERGE on batch/key to obtain equivalent behaviour. Append-only loads may duplicate raw rows; latest-snapshot modelling deduplicates reporting rows but does not control raw storage. Scheduled ingestion, retry/backoff, IAM, billing and live source authentication remain integration work.
 
 Reference: https://cloud.google.com/dataform/docs/overview
+
+Local snapshots reject conflicting values at an equal extraction timestamp. UTC normalisation makes equivalent timezone representations identical. A real cloud loader must reject the same conflict before publishing; the SQLX hash tie-break is deterministic only and must not resolve contradictory source truth.

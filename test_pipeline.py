@@ -20,4 +20,21 @@ class Checks(unittest.TestCase):
         self.assertEqual(report(self.c),before)
     def test_geography_is_part_of_key(self):
         r=synthetic_export();ingest(self.c,r+[dict(x,geo='GB') for x in r]);self.assertEqual(len(report(self.c)),18)
+    def test_invalid_dates_types_and_missing_fields(self):
+        row=synthetic_export()[0]
+        for patch in [dict(month='yesterday'),dict(month='2026-01-02'),dict(extracted_at='yesterday'),dict(extracted_at='2026-04-01T00:00:00'),dict(searches=True),dict(keyword=42),dict(searches=2**63)]:
+            with self.assertRaises(ValueError):ingest(self.c,[dict(row,**patch)])
+        del row['extracted_at']
+        with self.assertRaises(ValueError):ingest(self.c,[row])
+    def test_timezone_normalisation_and_tie_conflicts(self):
+        row=synthetic_export()[0];a=ingest(self.c,[row])
+        self.assertEqual(a,ingest(self.c,[dict(row,extracted_at='2026-04-01T02:00:00+02:00')]))
+        with self.assertRaisesRegex(ValueError,'conflicting snapshot'):ingest(self.c,[dict(row,searches=999)])
+        self.assertEqual(report(self.c)[0][-1],row['searches'])
+        ingest(self.c,[dict(row,extracted_at='2026-03-31T23:30:00-01:00',searches=999)])
+        self.assertEqual(report(self.c)[0][-1],999)
+    def test_conflict_rejects_entire_batch(self):
+        r=synthetic_export();ingest(self.c,r)
+        with self.assertRaises(ValueError):ingest(self.c,[dict(r[0],geo='GB'),dict(r[1],searches=999)])
+        self.assertEqual(self.c.execute('select count(*) from keyword_monthly').fetchone()[0],9)
 if __name__=='__main__':unittest.main()
